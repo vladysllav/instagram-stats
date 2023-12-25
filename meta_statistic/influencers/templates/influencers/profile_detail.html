@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Profile Detail</h2>
+  <dl>
+    <dt>Field 1:</dt>
+    <dd>{{ profile.url_profile }}</dd>
+
+    <dt>Name:</dt>
+    <dd>{{ statistics.name }}</dd>  <dt>Profile Pictures:</dt>
+    <dd>
+      {% if statistics.profile_pictures %}
+        <img src="{{ statistics.profile_pictures.url }}" alt="Profile Picture" style="max-width: 100px; max-height: 100px;">
+      {% else %}
+        No Image
+      {% endif %}
+    </dd>
+
+    <dt>Followers:</dt>
+    <dd>{{ statistics.followers }}</dd>
+  </dl>
+{% endblock %}

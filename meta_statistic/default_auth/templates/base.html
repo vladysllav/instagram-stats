@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Site Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+
+
+      <ul class="nav col-12 col-md-auto mb-4 justify-content-center mb-md-0">
+        <li><a href="{% url 'home' %}" class="nav-link px-4 link-secondary">Home</a></li>
+
+
+      </ul>
+
+        <div class="col-md-3 text-end">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary me-2">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-primary me-2">Sign-up</a>
+            {% endif %}
+        </div>
+
+    </header>
+    <div class="tab-content" id="myTabContent">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+  </div>
+</body>
+</html>
