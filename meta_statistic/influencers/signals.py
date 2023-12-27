@@ -17,6 +17,7 @@ def create_dynamic_profile_data(sender, instance, created, **kwargs):
             name=name,
             profile_pictures=get_save_profile_pictures(name),
             followers=get_profile_followers(name),
+            profile_pictures_url=get_profile_photo(name)
         )
 
         # user_data, _ = UserData.objects.get_or_create(user=instance)

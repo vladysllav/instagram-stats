@@ -32,26 +32,3 @@ class BaseProfileDetailView(DetailView):
         context['statistics'] = self.object.statistics.first()  # Fetch related Statistics object
         return context
 
-def update_followers(profile_data_object, new_followers_count):
-    """Обновляет поле followers в указанном объекте DynamicProfileData.
-
-    Args:
-        profile_data_object: Объект DynamicProfileData, для которого нужно обновить поле followers.
-        new_followers_count: Новое значение количества подписчиков.
-    """
-
-    profile_data_object.followers = new_followers_count
-    profile_data_object.save()
-
-# def index(request):
-#     profile_data = DynamicProfileData.objects.get(base_profile=53)
-#     followers = 8
-#     update_followers(profile_data, followers)
-#     return HttpResponse("fireeeee")
-#
-# class ProfileListView(ListView):
-#     pass
-#
-#
-# class ProfileStatisticDetail(DetailView):
-#     pass
