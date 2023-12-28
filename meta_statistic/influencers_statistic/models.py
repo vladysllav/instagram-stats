@@ -3,19 +3,7 @@ from django.urls import reverse
 
 from influencers.models import BaseProfile
 
-#
-# class UserData(models.Model):
-#     user = models.OneToOneField(BaseProfile, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=50, null=True, blank=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     profile_pictures = models.ImageField(upload_to="influencers/profile_images", null=True, blank=True)
-#     followers = models.IntegerField(null=True, blank=True)
-#
-#     def __str__(self):
-#         return f'Statistics for {self.user.name}'
-#
-#     def get_absolute_url(self):
-#         return reverse('profile_detail', kwargs={'pk': self.user.pk})
+
 
 
 class Statistics(models.Model):

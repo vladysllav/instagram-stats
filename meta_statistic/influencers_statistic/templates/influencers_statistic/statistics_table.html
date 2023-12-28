@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Profile URL</th>
+                <th>Max Profile Pictures</th>
+                <th>Max Created At</th>
+                <th>Max Followers</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in statistics %}
+                <tr>
+                    <td>{{ stat.name }}</td>
+                    <td>{{ stat.profile__url_profile }}</td>
+
+                    <td>
+                        {% if stat.profile_pictures %}
+                          <img src="{{ stat.profile_pictures.url }}" alt="Profile Picture" style="max-width: 100px; max-height: 100px;">
+                        {% else %}
+                          No Image
+                        {% endif %}
+                    </td>
+                    <td>{{ stat.max_created_at }}</td>
+                    <td>{{ stat.max_followers }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

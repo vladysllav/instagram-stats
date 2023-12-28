@@ -2,7 +2,7 @@
 
 {% block content %}
   <h2>{{ title }}</h2>
-  
+
   <table class="table">
     <thead>
       <tr>
@@ -16,9 +16,10 @@
     <tbody>
       {% for statistic in statistics %}
         <tr>
-          <td><a href="{{ statistic.get_absolute_url }}">{{ statistic.user.name }}</a></td>
-          <td>{{ statistic.name }}</td>
+          <td>{{ statistic.name }}</a></td>
+          <td>{{ statistic.profile.url_profile }}</td>
           <td>{{ statistic.created_at }}</td>
+
           <td>
             {% if statistic.profile_pictures %}
               <img src="{{ statistic.profile_pictures.url }}" alt="Profile Picture" style="max-width: 100px; max-height: 100px;">

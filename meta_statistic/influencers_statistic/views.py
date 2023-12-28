@@ -1,3 +1,4 @@
+from django.db.models.functions import TruncDate
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
@@ -6,9 +7,6 @@ from django.views.generic import ListView
 from influencers.models import BaseProfile
 from influencers_statistic.models import Statistics
 from utils import get_profile_followers, get_profile_photo, get_save_profile_pictures
-from django.db.models import Min, Max, OuterRef, Subquery
-from collections import defaultdict
-from django.db.models import F
 
 
 class BaseStatistic(ListView):
@@ -17,12 +15,11 @@ class BaseStatistic(ListView):
     template_name = 'influencers_statistic/statistics.html'
     extra_context = {'title': 'STATISTICS'}
 
-
     def get_queryset(self):
         username = self.kwargs.get('name')
         if username:
-            return Statistics.objects.filter(username=username)
-        return Statistics.objects.all()
+            return Statistics.objects.filter(username=username).order_by('name', '-created_at').distinct('name')
+        return Statistics.objects.all().order_by('name', '-created_at').distinct('name')
 
 
 class ProfileStatsUpdater:
@@ -61,21 +58,3 @@ def update_statistic(request):
     return HttpResponse("fireeeee")
 
 
-class UserProfileView(View):
-    def get(self, request, *args, **kwargs):
-        # Получаем список уникальных пользователей
-        profiles = BaseProfile.objects.all()
-
-        # Получаем статистику по фоловерам для каждого пользователя за обе даты
-        followers_stats_25 = Statistics.objects.filter(profile__in=profiles, created_at__date='2023-12-25')
-        followers_stats_27 = Statistics.objects.filter(profile__in=profiles, created_at__date='2023-12-27')
-
-        # Объединяем данные статистики
-        followers_stats = followers_stats_25 | followers_stats_27
-
-        # Создаем контекст данных для передачи в шаблон
-        context = {
-            'profiles': profiles,
-            'followers_stats': followers_stats,
-        }
-        return render(request, 'influencers_statistic/statistics_table.html', context)
