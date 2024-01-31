@@ -1,35 +1,59 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>{{ title }}</h2>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>User</th>
-        <th>Name</th>
-        <th>Created At</th>
-        <th>Profile Pictures</th>
-        <th>Followers</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for statistic in statistics %}
-        <tr>
-          <td>{{ statistic.name }}</a></td>
-          <td>{{ statistic.profile.url_profile }}</td>
-          <td>{{ statistic.created_at }}</td>
+  <h2 style="color: #ffc107; text-align: center; margin-top: 30px;"><strong>Profiles</strong></h2>
 
-          <td>
-            {% if statistic.profile_pictures %}
-              <img src="{{ statistic.profile_pictures.url }}" alt="Profile Picture" style="max-width: 100px; max-height: 100px;">
-            {% else %}
-              No Image
-            {% endif %}
-          </td>
-          <td>{{ statistic.followers }}</td>
+
+  <div style="display: flex; justify-content: center; margin-top: 20px;">
+    <table class="table" style="width: 80%; max-width: 1200px; margin-top: 20px; margin-bottom: 20px; margin-left: auto; margin-right: auto;  color: white; border: 3px solid #ffc107; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <thead>
+        <tr style="border-bottom: 3px solid #ffc107;">
+          <th style="padding: 10px; vertical-align: middle;">#</th>
+          <th style="vertical-align: middle; text-align: center;">Photo 📸</th>
+          <th style="vertical-align: middle; text-align: center;">Name 🆔</th>
+          <th style="vertical-align: middle; text-align: center;">Followers 🤟🏿</th>
+          <th style="vertical-align: middle; text-align: center;">URL 🌐</th>
+          <th style="vertical-align: middle; text-align: center;">Created At 📆</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for statistic in statistics %}
+          <tr>
+            <td style="padding: 10px; vertical-align: middle; text-align: center;">{{ forloop.counter }}</td>
+            <td style="vertical-align: middle; text-align: center;">
+              {% if statistic.profile_pictures %}
+                <img src="{{ statistic.profile_pictures.url }}" alt="Profile Picture" style="width: 100px; height: 100px; border: 2px solid #ffc107; border-radius: 50%;">
+              {% else %}
+                No Image
+              {% endif %}
+            </td>
+            <td style="vertical-align: middle; text-align: center;">{{ statistic.name }}</td>
+            <td style="vertical-align: middle; text-align: center;">{{ statistic.followers }}</td>
+            <td style="vertical-align: middle; text-align: center;"><a href="{{ statistic.profile.url_profile }}" style="color: #FFD700; text-decoration: none;" target="_blank">Instagram</a></td>
+            <td style="vertical-align: middle; text-align: center;">{{ statistic.created_at }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+<style>
+       .custom-btn {
+    background-color: #343a40; /* Темный фон кнопки */
+    border-color: #ffc107; /* Желтая граница */
+    color: #ffc107; /* Желтый цвет текста кнопки */
+
+    }
+
+    .custom-btn:hover {
+        background-color: #ffc107; /* Желтый фон при наведении */
+        color: #343a40; /* Темный цвет текста при наведении */
+    }
+</style>
+<div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+
+        <a href="{% url 'profile_create' %}" class="btn custom-btn btn-lg ml-2">Add New Profile</a>
+        <a href="{% url 'home' %}" class="btn custom-btn btn-lg ml-2">Cancel</a>
+      </div>
 {% endblock %}

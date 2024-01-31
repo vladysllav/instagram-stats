@@ -1,13 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if messages %}
-        <div class="alert alert-danger mt-2">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </div>
-    {% endif %}
+{% if messages %}
+    <div class="alert alert-danger mt-2">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+{% endif %}
+    <style>
+        .card {
+            background-color: #343a40; /* Цвет фона */
+            color: #ffc107; /* Цвет текста */
+            border-color: #ffc107; /* Цвет границы (если нужен) */
+        }
+            .custom-btn {
+        background-color: #343a40; /* Темный фон кнопки */
+        border-color: #ffc107; /* Желтая граница */
+        color: #ffc107; /* Желтый цвет текста кнопки */
+
+    }
+
+    .custom-btn:hover {
+        background-color: #ffc107; /* Желтый фон при наведении */
+        color: #343a40; /* Темный цвет текста при наведении */
+    }
+
+
+    </style>
+
+
 
     <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -16,26 +38,28 @@
                     <div class="card-body p-md-5">
                         <div class="row justify-content-center">
                             <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Log in</p>
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">log in</p>
                                 <form class="mx-1 mx-md-4" method="post">
                                     {% csrf_token %}
-                                    <div class="d-flex flex-row align-items-center mb-4">
+                                   <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                                        <div class="form-outline flex-fill mb-0">
+                                        <div class="form-outline flex-fill mb-0 custom-form-outline">
                                             {{ form.username }}
                                         </div>
                                     </div>
 
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                                        <div class="form-outline flex-fill mb-0">
+                                        <div class="form-outline flex-fill mb-0 custom-form-outline">
                                             {{ form.password }}
                                         </div>
                                     </div>
 
-                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                        <button type="submit" class="btn btn-primary btn-lg">Log in</button>
+                                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                       <button type="submit" class="btn custom-btn btn-lg mr-2">Login</button>
+                                        <a href="{% url 'home' %}" class="btn custom-btn btn-lg ml-2">Cancel</a>
                                     </div>
+
                                 </form>
                             </div>
                         </div>

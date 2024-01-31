@@ -1,10 +1,48 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h2>Create Profile</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-  </form>
+<style>
+     .custom-btn {
+        background-color: #343a40; /* Темный фон кнопки */
+        border-color: #ffc107; /* Желтая граница */
+        color: #ffc107; /* Желтый цвет текста кнопки */
+
+    }
+
+    .custom-btn:hover {
+        background-color: #ffc107; /* Желтый фон при наведении */
+        color: #343a40; /* Темный цвет текста при наведении */
+    }
+
+    .text-container {
+        color: #ffc107; /* Белый цвет текста */
+        font-size: 30px; /* Размер шрифта 30px */
+        text-align: center; /* Выравнивание текста по центру */
+        max-width: 1000px; /* Максимальная ширина блока */
+        margin: 0 auto; /*
+        padding: 20px; / Паддинг для внутренних отступов */
+        margin-top: 40px; /* Отступ сверху */
+
+</style>
+
+
+<div style="background: linear-gradient(90deg, rgba(255,94,0,1) 0%, rgba(255,23,68,1) 50%, rgba(102,51,153,1) 100%); padding:20px;">
+
+  <div style="background-color: #333; padding: 50px; border-radius: 8px; max-width: 1000px; margin: 40px auto; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #ffc107">Create Profile</h2>
+    <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 10px;">
+      {% csrf_token %}
+      {% for field in form %}
+        <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" placeholder="{{ field.label }}" id="id_{{ field.name }}" style="padding: 10px; border: 2px solid #fff; border-radius: 4px; margin-bottom: 10px; color: #333;">
+      {% endfor %}
+      <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+        <button type="submit" class="btn custom-btn btn-lg">Create</button>
+        <a href="{% url 'home' %}" class="btn custom-btn btn-lg ml-2">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="text-container">
+  This page is necessary to add the profile url that you want to track.
+  After adding a profile, it will automatically be added to the list of profiles and you can track statistics on it
+</div>
 {% endblock %}

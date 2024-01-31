@@ -1,39 +1,117 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Your Site Title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+                html, body {
+                height: 100%; /* Указываем высоту для всей страницы */
+                margin: 0; /* Сброс стандартных отступов */
+            }
+            .container-fluid {
+                display: flex; /* Включаем Flexbox */
+                flex-direction: column; /* Элементы выстраиваются в колонку */
+                justify-content: space-between; /* Распределение пространства между контентом и футером */
+                height: 100%; /* Высота контейнера тянется на всю доступную высоту */
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            body {
+                background-color: #343a40; /* Светлый фон */
+                color: #212529; /* Черный цвет текста */
+            }
+            header {
+                background-color: #343a40; /* Фон, похожий на text-bg-dark в Bootstrap */
+                border-bottom: 1px solid #ffc107; /* Желтая граница снизу для хедера */
+            }
+            .nav-link {
+                color: #ffc107; /* Желтый цвет ссылок */
+            }
+            .nav-link:hover {
+                color: #fff; /* Белый цвет при наведении */
+            }
+            .btn-outline-primary {
+                border-color: #ffc107; /* Желтые границы для кнопок */
+                color: #ffc107; /* Белый цвет текста кнопок */
+            }
+            .btn-outline-primary:hover {
+                background-color: #ffc107; /* Желтый фон при наведении */
+                color: #343a40; /* Цвет текста при наведении, как у text-bg-dark */
+            }
+
+            footer {
+                border-top: 1px solid #ffc107; /* Желтая граница сверху для футера */
+                background-color: #343a40; /* Темный фон, аналогичный хедеру */
+                color: #ffc107; /* Желтый цвет текста */
+            }
+
+            footer p {
+                color: #ffc107; /* Желтый цвет текста */
+                margin-bottom: 0; /* Убрать нижний отступ у параграфа, если он есть */
+            }
+            .custom-link {
+                font-size: 30px; /* Устанавливает размер шрифта */
+                font-weight: bold; /* Делает шрифт жирным */
+            }
+             .gradient-bar {
+            height: 320px; /* Three times the height of the header border if it's 4px */
+            background-image: url('{% static "img/instagram_gradient.jpeg" %}'); /* Путь к изображению градиента */
+            background-size: cover; /* Покрыть весь элемент */
+            background-repeat: no-repeat; /* Gradient similar to instascrape */
+            display: flex; /* Включаем Flexbox */
+            }
+
+            .custom-margin-left {
+            margin-left: 150px; /* Или любое другое значение, которое вам нужно */
+
+
+}
+
+
+
+        </style>
 </head>
 <body>
-<div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+<div class="container-fluid">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
+        <ul class="nav col-12 col-md-auto mb-4 justify-content-end mb-md-0">
 
-
-      <ul class="nav col-12 col-md-auto mb-4 justify-content-center mb-md-0">
-        <li><a href="{% url 'home' %}" class="nav-link px-4 link-secondary">Home</a></li>
-
-
-      </ul>
-
+            <img src="{% static 'img/logo.png' %}" alt="Logo" class="mr-4 rounded custom-margin-left" style="width: 64px; height: 64px;">
+            <li><a href="{% url 'home' %}" class="nav-link px-4 link-secondary custom-link">statistagram</a></li>
+        </ul>
         <div class="col-md-3 text-end">
             {% if user.is_authenticated %}
+
                 <form method="post" action="{% url 'logout' %}">
+                    <span class="me-2" style="margin-right: 10px; color: #ffc107; font-size: 18px; custom-link;">Hello, {{ user.username }}</span>
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-primary me-2">Logout</button>
                 </form>
             {% else %}
                 <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Login</a>
                 <a href="{% url 'signup' %}" class="btn btn-outline-primary me-2">Sign-up</a>
+
             {% endif %}
         </div>
-
     </header>
-    <div class="tab-content" id="myTabContent">
-            {% block content %}
+        {% block content %}
 
-            {% endblock %}
-        </div>
-  </div>
+        {% endblock %}
+        <footer class="py-3 text-bg-dark mt-auto">
+            <div class="container-fluid text-center">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="mb-0 text-light">&copy; 2024 Your Site Name</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+</div>
+
 </body>
+
 </html>

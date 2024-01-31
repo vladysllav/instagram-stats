@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
+
+from django.conf import settings
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -43,6 +45,8 @@ INSTALLED_APPS = [
     'default_auth.apps.DefaultAuthConfig',
     'influencers.apps.InfluencersConfig',
     'influencers_statistic.apps.InfluencersStatisticConfig',
+    'django_celery_beat',
+
 ]
 
 MIDDLEWARE = [
@@ -137,3 +141,35 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if settings.DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'level': 'INFO',
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            '': {
+                'handlers': ['console'],
+                'level': 'INFO',
+            },
+        },
+    }
+
+
+# Celery
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+
+CELERY_BEAT_SCHEDULE = {
+    "update_statistic": {
+        "task": "influencers_statistic.tasks.update_statistic",
+        "schedule": 300.0,
+    }
+
+}

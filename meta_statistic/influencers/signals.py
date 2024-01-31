@@ -1,13 +1,25 @@
-
+"""Signals for influencers app."""
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from utils import get_profile_photo, get_profile_followers, get_save_profile_pictures
-# from influencers_statistic.models import Statistics
-#
+from utils import client
+
+
 @receiver(post_save, sender='influencers.BaseProfile')
 def create_dynamic_profile_data(sender, instance, created, **kwargs):
-    # from influencers.models import BaseProfile  # Перенесен импорт внутрь функции
-    from influencers_statistic.models import Statistics  # Перенесен импорт внутрь функции
+    """
+    Creates a Statistics object when a new BaseProfile is created.
+    This post_save signal handler automatically creates an entry in the Statistics model,
+    when a new BaseProfile instance is created. It uses functions
+    for additional profile information, such as profile photo URL,
+    number of subscribers, etc.
+    :param sender: The model class that sent the signal.
+    :param instance: The instance of the model that was saved.
+    :param created: Whether a new instance was created (True if so).
+    :param kwargs: Additional keyword arguments.
+    :return:
+    """
+
+    from influencers_statistic.models import Statistics
 
     if created:
         url_profile = instance.url_profile
@@ -15,13 +27,8 @@ def create_dynamic_profile_data(sender, instance, created, **kwargs):
         Statistics.objects.create(
             profile=instance,
             name=name,
-            profile_pictures=get_save_profile_pictures(name),
-            followers=get_profile_followers(name),
-            profile_pictures_url=get_profile_photo(name)
+            profile_pictures=client.get_save_profile_pictures(name),
+            followers=client.get_profile_followers(name),
+            profile_pictures_url=client.get_profile_photo(name)
         )
 
-        # user_data, _ = UserData.objects.get_or_create(user=instance)
-        # user_data.name = name
-        # user_data.profile_pictures = get_save_profile_pictures(name)
-        # user_data.followers = get_profile_followers(name)
-        # user_data.save()

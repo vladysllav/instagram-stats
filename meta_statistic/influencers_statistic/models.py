@@ -4,8 +4,6 @@ from django.urls import reverse
 from influencers.models import BaseProfile
 
 
-
-
 class Statistics(models.Model):
     profile = models.ForeignKey(BaseProfile, on_delete=models.CASCADE, related_name='statistics')
     name = models.CharField(max_length=50, null=True, blank=True)

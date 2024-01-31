@@ -1,20 +1,83 @@
+
 {% extends 'base.html' %}
-
+{% load static %}
+{% block title %}Home{% endblock %}
 {% block content %}
+    <style>
+        .custom-link {
+            font-size: 30px; /* Устанавливает размер шрифта */
+            font-weight: bold; /* Делает шрифт жирным */
+        }
+         .gradient-bar {
+        height: 320px; /* Three times the height of the header border if it's 4px */
+        background-image: url('{% static "img/instagram_gradient.jpeg" %}'); /* Путь к изображению градиента */
+        background-size: cover; /* Покрыть весь элемент */
+        background-repeat: no-repeat; /* Gradient similar to instascrape */
+        display: flex; /* Включаем Flexbox */
+        }
+            .button-group {
+            display: flex; /* Используем Flexbox для выравнивания */
+            justify-content: center; /* Центрируем кнопки по горизонтали */
+            padding: 150px 0; /* Добавляем немного отступа сверху и снизу */
+            gap: 50px;
+
+        }
+        .btn-custom-primary {
+            border-color: #ffc107; /* Желтые границы для кнопок */
+            color: #ffc107; /* Белый цвет текста кнопок */
+            padding: 70px 140px;
+            font-size: 30px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .btn-custom-primary:hover {
+            background-color: #ffc107; /* Желтый фон при наведении */
+            color: #343a40; /* Цвет текста при наведении, как у text-bg-dark */
+        }
+
+       .btn-container {
+        display: inline-block; /* Делаем контейнеры строчными блоками, чтобы они выстраивались в ряд */
+        margin-right: 10px; /* Отступ справа, если нужно */
+        }
+
+        .btn-container .btn {
+            display: block; /* Делаем кнопки блочными элементами, чтобы описание было именно под ними */
+            margin-bottom: 20px; /* Небольшой отступ между кнопкой и описанием */
+        }
+
+        .btn-description {
+            text-align: center; /* Центрируем текст описания */
+            width: 100%; /* Ширина описания соответствует ширине контейнера, который уже соответствует ширине кнопки */
+            margin: 0; /* Убираем стандартные отступы у параграф
 
 
-<div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-5 fw-bold text-body-emphasis">Meta Statistic
-    </h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">
-This service provide statistic for influencers from instagram .</p>
-        <div class="d-grid gap-2 justify-content-sm-center">
-            <a href="{% url 'signup' %}" class="btn btn-outline-primary btn-lg px-4 gap-1">Sign-up</a>
-            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg px-4 gap-1">Login</a>
+        }
 
-      </div>
+    </style>
+
+<div class="gradient-bar d-flex flex-column justify-content-center text-center  px-5">
+    <p class="px-4 link-secondary custom-link" style="font-size: 50px;"><-statistagram-></p>
+    <p class="px-4 link-secondary custom-link" style="font-size: 30px;">this service provide statistic for influencers from instagram</p>
+    <p class="px-4 link-secondary custom-link" style="font-size: 30px;">⚠️before using the service you must log in, otherwise the functionality will not be available⚠️</p>
+<!--    <p class="px-4 link-secondary custom-link" style="font-size: 30px;">you just need to add the profile you want to track and the service will automatically update the statistics</p>-->
+
+</div>
+
+<div class="button-group">
+     <div class="btn-container">
+        <a href="{% url 'profile_create' %}" class="btn btn-custom-primary me-2">Add Profile</a>
+        <p class="btn-description" style="color: #ffc107; font-size: 18px; custom-link;">Add a new profile to follow  ☝</p>
     </div>
-  </div>
+
+    <div class="btn-container">
+        <a href="{% url 'statistics' %}" class="btn btn-custom-primary me-2">Profiles</a>
+        <p class="btn-description" style="color: #ffc107; font-size: 18px; custom-link;">View followed profiles ☝</p>
+    </div>
+    <div class="btn-container">
+        <a href="{% url 'period_statistics' %}" class="btn btn-custom-primary me-2">Statistics</a>
+        <p class="btn-description" style="color: #ffc107; font-size: 18px; custom-link;">View and filter statistics of tracked profiles  ☝</p>
+    </div>
+
+</div>
 
 {% endblock %}
