@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+  .custom-btn {
+    background-color: #343a40; /* Темный фон кнопки */
+    border-color: #ffc107; /* Желтая граница */
+    color: #ffc107; /* Желтый цвет текста кнопки */
+    margin-left: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+.custom-btn:hover {
+    background-color: #ffc107; /* Желтый фон при наведении */
+    color: #343a40; /* Темный цвет текста при наведении */
+}
+input[type="date"] {
+    background: linear-gradient(to right, #343a40, #ffc107); /* Градиентный фон */
+    border: 2px solid #ffc107; /* Желтая граница */
+    color: white; /* Белый текст */
+    padding: 5px; /* Поле внутри */
+    border-radius: 5px; /* Скругленные углы */
+    cursor: pointer;
+  }
+
+  /* Стили для текста в полях ввода даты */
+  input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+    color: white;
+  }
+
+  input[type="date"]::-webkit-inner-spin-button {
+    display: none; /* Убрать стрелки */
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Иконка календаря будет белой */
+  }
+
+  /* Стили при наведении на поля ввода даты */
+  input[type="date"]:hover {
+    background: linear-gradient(to right, #ffc107, #343a40); /* Изменение градиента */
+  }
+
+</style>
+  <h2 style="color: #ffc107; text-align: center; margin-top: 30px;"><strong>{{ title }}</strong></h2>
+
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <form method="get" action="{% url 'period_statistics' %}" style="margin-bottom: 20px;">
+          <label for="date_start" style="color: #ffc107; margin-right: 10px;">Start Date:</label>
+          <input type="date" id="date_start" name="date_start" required style="margin-right: 10px;">
+
+          <label for="date_end" style="color: #ffc107; margin-right: 10px;">End Date:</label>
+          <input type="date" id="date_end" name="date_end" required style="margin-right: 10px;">
+
+          <input type="submit" value="Get Statistics" class="custom-btn">
+        </form>
+    </div>
+
+  <div style="display: flex; justify-content: center; margin-top: 20px;">
+    {% if statistics_period %}
+      <table class="table" style="width: 80%; max-width: 1200px; margin-top: 20px; margin-bottom: 20px; margin-left: auto; margin-right: auto;  color: white; border: 3px solid #ffc107; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <thead>
+          <tr style="border-bottom: 3px solid #ffc107;">
+            <th style="padding: 10px; vertical-align: middle; text-align: center;">#</th>
+            <th style="vertical-align: middle; text-align: center;">Profile Photo</th>
+
+            <th style="vertical-align: middle; text-align: center;">Name</th>
+            <th style="vertical-align: middle; text-align: center;">Followers at Start</th>
+            <th style="vertical-align: middle; text-align: center;">Followers at End</th>
+            <th style="vertical-align: middle; text-align: center;">Change</th>
+            <th style="vertical-align: middle; text-align: center;">Change (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for stat in statistics_period %}
+            <tr>
+              <td style="padding: 10px; vertical-align: middle; text-align: center;">{{ forloop.counter }}</td>
+              <td style="vertical-align: middle; text-align: center;">
+                {% if stat.profile_pictures %}
+                  <img src="{{ stat.profile_pictures.url }}" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%;">
+                {% else %}
+                  No Image
+                {% endif %}
+              </td>
+
+              <td style="vertical-align: middle; text-align: center;">{{ stat.name }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_start }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_end }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_change }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_change_percent|floatformat:2 }}%</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p style="text-align: center; color: white;">No statistics available for the selected period.</p>
+    {% endif %}
+  </div>
+  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+
+
+        <a href="{% url 'home' %}" class="btn custom-btn btn-lg ml-2">Cancel</a>
+      </div>
+{% endblock %}
