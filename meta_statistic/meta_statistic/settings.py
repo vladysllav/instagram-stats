@@ -169,7 +169,7 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULE = {
     "update_statistic": {
         "task": "influencers_statistic.tasks.update_statistic",
-        "schedule": 300.0,
+        "schedule": 84600,
     }
 
 }
