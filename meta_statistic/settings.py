@@ -87,12 +87,12 @@ DATABASES = {
 
     'default': {
 
-        'ENGINE': os.getenv('ENGINE'),
+        'ENGINE': os.getenv('ENGINE', "django.db.backends.postgresql"),
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('HOST'),
-        'PORT': os.getenv('PORT')
+        'HOST': os.getenv('HOST', "db"),
+        'PORT': os.getenv('PORT', 5432)
     }
 }
 
@@ -162,7 +162,7 @@ if settings.DEBUG:
 
 
 # Celery
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://redis:6379/0")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 

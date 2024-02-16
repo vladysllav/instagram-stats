@@ -15,42 +15,21 @@ what user can add to the system.
 
 
 ---
-## Installation
+## Installation with Docker
 **1. Clone the repository:**
 
    ```shell
    git clone https://github.com/AlexGrig23/meta-statistics.git
    ```
 
-  Create virtual env.
+**2. Copy `.env.example` to `.env` file and fill all environment variables**
+
+**3. In order to run the application, you need a Docker desktop**
+
+Navigate to the project directory and run:
 
    ```shell
-   python -m venv venv
-   ```
-  
-   Activate virtual env.
-   
-   on Windows: 
-   ```shell
-   cd venv/Scripts
-   ```
-   ```shell
-   ./activate
-   ```
-  on Linux or Mac
-   ```shell
-   source venv/bin/activate
-   ```
-
-**2. In order to run the application, you need a Docker desktop**
-
-Navigate to the project directory:
-   ```shell
-   cd meta_statistic (root)
-   ```
-
-   ```shell
-   docker compose build --no-cache
+   docker compose build
    ```
    
 **3. After that you have to execute the following command. 
@@ -76,7 +55,33 @@ with the help of the command:
 
 Starting development server at  http://127.0.1:8000/
   
-	
+## Installation without Docker
+
+Create virtual env.
+
+   ```shell
+   python -m venv venv
+   ```
+  
+   Activate virtual env.
+   
+   on Windows: 
+   ```shell
+   cd venv/Scripts
+   ```
+   ```shell
+   ./activate
+   ```
+  on Linux or Mac
+   ```shell
+   source venv/bin/activate
+   ```
+   Install requirements:
+   ```shell
+   pip install -r requirements.txt
+   ```
+ 
+
 ## Usage
 
 **1. Usage**
