@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Any
 
 from django.conf import settings
@@ -15,11 +16,28 @@ class ProfileClient:
     Class for working with the Instagram API.
     """
     def __init__(self):
+        self.session_file = Path(settings.BASE_DIR) / 'instagram_session.json'  # Path to store session data
+        self.client = Client()
+        self.load_or_create_session()
+        self.profile_cache = {}
+
+    def load_or_create_session(self):
+        """
+        Load existing session or create a new one.
+        """
+        if os.path.exists(self.session_file):
+            self.client.load_settings(self.session_file)
+        else:
+            self.create_new_session()
+
+    def create_new_session(self):
+        """
+        Create a new session and save it.
+        """
         username = os.getenv("ACCOUNT_USERNAME")
         password = os.getenv("ACCOUNT_PASSWORD")
-        self.client = Client()
         self.client.login(username, password)
-        self.profile_cache = {}
+        self.client.dump_settings(self.session_file)
 
     def user_info_by_username(self, profile_name) -> Any:
         """

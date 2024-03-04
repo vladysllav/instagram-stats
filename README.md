@@ -16,15 +16,13 @@ what user can add to the system.
 
 ---
 ## Installation with Docker
-**1. Clone the repository:**
 
-   ```shell
-   git clone https://github.com/AlexGrig23/meta-statistics.git
-   ```
+<h3>When the repository is <u>cloned:</u></h3>
 
-**2. Copy `.env.example` to `.env` file and fill all environment variables**
 
-**3. In order to run the application, you need a Docker desktop**
+**1. Copy `.env.example` to `.env` file and fill all environment variables**
+
+**2. In order to run the application, you need a Docker desktop**
 
 Navigate to the project directory and run:
 
