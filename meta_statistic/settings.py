@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'influencers.apps.InfluencersConfig',
     'influencers_statistic.apps.InfluencersStatisticConfig',
     'django_celery_beat',
+    'fontawesomefree',
 
 ]
 

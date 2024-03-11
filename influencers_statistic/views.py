@@ -22,9 +22,25 @@ class BaseStatistic(LoginRequiredMixin, OwnProfileMixin, ListView):
 
     def get_queryset(self):
         current_user = self.request.user
-        if current_user:
-            return Statistics.objects.filter(profile__user=current_user).order_by('name', '-created_at').distinct('name')
-        return Statistics.objects.filter(profile__user=current_user).order_by('name', '-created_at').distinct('name')
+        sort_by = self.request.GET.get('sort_by')
+        order = self.request.GET.get('order', 'desc')
+        queryset = Statistics.objects.filter(profile__user=current_user)
+
+        # Сортировка queryset в соответствии с параметрами сортировки
+        if sort_by == 'followers':
+            queryset = queryset.order_by('-followers' if order == 'desc' else 'followers')
+        elif sort_by == 'created_at':
+            queryset = queryset.order_by('-created_at' if order == 'desc' else 'created_at')
+        else:
+            queryset = queryset.order_by('name', '-created_at').distinct('name')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sort_by'] = self.request.GET.get('sort_by')
+        context['order'] = self.request.GET.get('order', 'desc')
+        return context
 
 
 class PeriodStatistic(LoginRequiredMixin, OwnProfileMixin, ListView):
@@ -32,7 +48,6 @@ class PeriodStatistic(LoginRequiredMixin, OwnProfileMixin, ListView):
     context_object_name = 'statistics_period'
     template_name = 'influencers_statistic/period_statistics.html'
     extra_context = {'title': 'Filter by period statistics'}
-
 
     def get_queryset(self):
         current_user = self.request.user
