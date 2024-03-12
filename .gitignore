@@ -11,3 +11,6 @@ db.sqlite3
 media/
 *.swp
 media/
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir
