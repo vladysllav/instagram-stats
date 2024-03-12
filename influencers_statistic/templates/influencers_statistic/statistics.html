@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load influencers_statistic_tags %}
 {% block content %}
 
   <h2 style="color: #ffc107; text-align: center; margin-top: 30px;"><strong>Profiles</strong></h2>
@@ -12,9 +13,13 @@
           <th style="padding: 10px; vertical-align: middle;">#</th>
           <th style="vertical-align: middle; text-align: center;">Photo 📸</th>
           <th style="vertical-align: middle; text-align: center;">Name 🆔</th>
-          <th style="vertical-align: middle; text-align: center;">Followers 🤟🏿</th>
+          <th style="vertical-align: middle; text-align: center;">
+              {% sort_link "Followers 🤟🏿" "followers" sort_by order %}
+          </th>
           <th style="vertical-align: middle; text-align: center;">URL 🌐</th>
-          <th style="vertical-align: middle; text-align: center;">Created At 📆</th>
+          <th style="vertical-align: middle; text-align: center;">
+              {% sort_link "Created At 📆" "created_at" sort_by order %}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -55,5 +60,7 @@
 
         <a href="{% url 'profile_create' %}" class="btn custom-btn btn-lg ml-2">Add New Profile</a>
         <a href="{% url 'home' %}" class="btn custom-btn btn-lg ml-2">Cancel</a>
+        <a href="{% url 'statistics' %}" class="btn custom-btn btn-lg ml-2">Reset filters</a>
+
       </div>
 {% endblock %}
