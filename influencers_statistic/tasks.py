@@ -16,6 +16,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 @shared_task
 def update_statistic():
     profiles = BaseProfile.objects.all()
@@ -24,7 +25,6 @@ def update_statistic():
         updater.add_statistics()
         sleep_time = random.randint(1, 3)
         time.sleep(sleep_time)
-        print("fireeeee")
+        logger.info(f"Statistics updated for profile {updater.profile_data.name}.")
     # Логируем успешное обновление
     logger.info("Statistics successfully updated for all profiles.")
-

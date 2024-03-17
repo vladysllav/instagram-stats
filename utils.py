@@ -46,7 +46,7 @@ class ProfileClient:
         :return: User info
         """
         if profile_name not in self.profile_cache:
-            self.profile_cache[profile_name] = self.client.user_info_by_username(profile_name)
+            self.profile_cache[profile_name] = self.client.user_info_by_username_v1(profile_name)
         return self.profile_cache[profile_name]
 
     def get_profile_photo(self, profile_name) -> str:
