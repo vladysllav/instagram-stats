@@ -1,5 +1,4 @@
 # Create your tasks here
-import random
 import time
 
 from celery import shared_task
@@ -25,7 +24,6 @@ def update_statistic(self):
         for profile in profiles:
             updater = ProfileStatsUpdater(profile.pk)
             updater.add_statistics()
-            # sleep_time = random.randint(1, 3)
             time.sleep(10)
             logger.info(f"Statistics updated for profile {updater.profile_data.name}.")
         # Логируем успешное обновление

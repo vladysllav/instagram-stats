@@ -38,7 +38,7 @@ class ProfileClient:
         """
         username = os.getenv("ACCOUNT_USERNAME")
         password = os.getenv("ACCOUNT_PASSWORD")
-        self.client.login(username, password, True)
+        self.client.login(username, password, relogin=True)
         self.client.dump_settings(self.session_file)
 
     def user_info_by_username(self, profile_name) -> Any:
