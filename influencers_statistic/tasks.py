@@ -17,14 +17,19 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-@shared_task
-def update_statistic():
-    profiles = BaseProfile.objects.all()
-    for profile in profiles:
-        updater = ProfileStatsUpdater(profile.pk)
-        updater.add_statistics()
-        sleep_time = random.randint(1, 3)
-        time.sleep(sleep_time)
-        logger.info(f"Statistics updated for profile {updater.profile_data.name}.")
-    # Логируем успешное обновление
-    logger.info("Statistics successfully updated for all profiles.")
+@shared_task(bind=True)
+def update_statistic(self):
+    try:
+        profiles = BaseProfile.objects.all()
+
+        for profile in profiles:
+            updater = ProfileStatsUpdater(profile.pk)
+            updater.add_statistics()
+            # sleep_time = random.randint(1, 3)
+            time.sleep(10)
+            logger.info(f"Statistics updated for profile {updater.profile_data.name}.")
+        # Логируем успешное обновление
+        logger.info("Statistics successfully updated for all profiles.")
+    except Exception as e:
+        logger.error('Exceptional case, retry in 5 seconds.')
+        raise self.retry(exc=e, countdown=5)
