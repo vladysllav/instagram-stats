@@ -6,6 +6,8 @@ from django.conf import settings
 from dotenv import load_dotenv
 import urllib.request
 
+from instagrapi.exceptions import LoginRequired
+
 from meta_statistic.settings import MEDIA_ROOT
 from instagrapi import Client
 load_dotenv()
@@ -36,7 +38,7 @@ class ProfileClient:
         """
         username = os.getenv("ACCOUNT_USERNAME")
         password = os.getenv("ACCOUNT_PASSWORD")
-        self.client.login(username, password)
+        self.client.login(username, password, relogin=True)
         self.client.dump_settings(self.session_file)
 
     def user_info_by_username(self, profile_name) -> Any:
@@ -45,12 +47,13 @@ class ProfileClient:
         :param profile_name: The name of the profile whose information you want to find
         :return: User info
         """
-        if profile_name not in self.profile_cache:
-            self.profile_cache[profile_name] = self.client.user_info_by_username(profile_name)
-        return self.profile_cache[profile_name]
+        try:
+            return self.client.user_info_by_username_v1(profile_name)
+        except LoginRequired:
+            self.create_new_session()
 
     def get_profile_photo(self, profile_name) -> str:
-        """
+        """s
         Get profile photo by username.
         :param profile_name: The name of the profile whose information you want to find
         :return: url to profile photo

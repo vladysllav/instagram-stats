@@ -114,23 +114,21 @@ class ProfileStatsUpdater:
             profile_pictures = self.profile_data.profile_pictures
             profile_pictures_url = self.profile_data.profile_pictures_url
 
-        new_statistics_entry = Statistics(
+        Statistics.objects.update_or_create(
             profile=self.profile,
-            name=self.profile_data.name,
-            profile_pictures=profile_pictures,
-            profile_pictures_url=profile_pictures_url,
-            followers=followers,
+            defaults={
+                'name': self.profile_data.name,
+                'profile_pictures': profile_pictures,
+                'profile_pictures_url': profile_pictures_url,
+                'followers': followers,
+            }
         )
 
-        new_statistics_entry.save()
 
-
-def update_statistic(request):
+def update_statistic_view(request):
     profiles = BaseProfile.objects.all()
     for profile in profiles:
         updater = ProfileStatsUpdater(profile.pk)
         updater.add_statistics()
     print("fireeeee")
     return HttpResponse("fireeeee")
-
-
