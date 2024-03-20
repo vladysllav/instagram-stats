@@ -11,6 +11,7 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'meta_statistic.settings')
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "meta_statistic.settings")
 
 application = get_asgi_application()

@@ -79,6 +79,27 @@ Create virtual env.
    pip install -r requirements.txt
    ```
  
+## Installation of pre-commit hooks
+
+This project uses pre-commit hooks for automatic code checking before committing. To use this functionality, follow these steps:
+
+1. Install pre-commit on your computer if it is not already installed:
+   ```shell
+   pip install pre-commit
+   ```
+   After that, navigate to the root of your repository and run the command:
+
+   ```shell
+   pre-commit install
+   ```    
+
+This will automatically set up pre-commit hooks for your repository. Now, before each commit, your code will be automatically checked against the specified rules.
+
+### Available pre-commit hooks
+
+- **isort**: Sorts import statements alphabetically within each section, and also automatically removes unused imports.
+- **black**: Formats code according to the Black code style.
+- **flake8**: Runs the Flake8 linter to check for syntax errors, style violations, and other issues.
 
 ## Usage
 

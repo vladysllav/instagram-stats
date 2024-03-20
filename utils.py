@@ -1,15 +1,14 @@
 import os
+import urllib.request
 from pathlib import Path
 from typing import Any
 
 from django.conf import settings
 from dotenv import load_dotenv
-import urllib.request
-
+from instagrapi import Client
 from instagrapi.exceptions import LoginRequired
 
-from meta_statistic.settings import MEDIA_ROOT
-from instagrapi import Client
+
 load_dotenv()
 
 
@@ -17,8 +16,9 @@ class ProfileClient:
     """
     Class for working with the Instagram API.
     """
+
     def __init__(self):
-        self.session_file = Path(settings.BASE_DIR) / 'instagram_session.json'  # Path to store session data
+        self.session_file = Path(settings.BASE_DIR) / "instagram_session.json"  # Path to store session data
         self.client = Client()
         self.load_or_create_session()
         self.profile_cache = {}
@@ -79,14 +79,14 @@ class ProfileClient:
         profile = self.user_info_by_username(profile_name)
         url = str(profile.profile_pic_url)
         filename = f"{profile.username}.jpg"
-        destination_folder = os.path.join(settings.MEDIA_ROOT, 'influencers', 'profile_images')
+        destination_folder = os.path.join(settings.MEDIA_ROOT, "influencers", "profile_images")
         os.makedirs(destination_folder, exist_ok=True)
         full_path = os.path.join(destination_folder, filename)
         urllib.request.urlretrieve(url, filename=full_path)
 
         relative_path = os.path.relpath(full_path, settings.MEDIA_ROOT)
 
-        return relative_path.replace(os.path.sep, '/')
+        return relative_path.replace(os.path.sep, "/")
 
 
 client = ProfileClient()

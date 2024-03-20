@@ -1,14 +1,9 @@
 from datetime import datetime
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import OuterRef
-from django.db.models.functions import TruncDate
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.views import View
-from django.views.generic import ListView
-
 from default_auth.views import OwnProfileMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
+from django.views.generic import ListView
 from influencers.models import BaseProfile
 from influencers_statistic.models import Statistics
 from utils import client
@@ -16,82 +11,90 @@ from utils import client
 
 class BaseStatistic(LoginRequiredMixin, OwnProfileMixin, ListView):
     model = Statistics
-    context_object_name = 'statistics'
-    template_name = 'influencers_statistic/statistics.html'
-    extra_context = {'title': 'STATISTICS'}
+    context_object_name = "statistics"
+    template_name = "influencers_statistic/statistics.html"
+    extra_context = {"title": "STATISTICS"}
 
     def get_queryset(self):
         current_user = self.request.user
-        sort_by = self.request.GET.get('sort_by')
-        order = self.request.GET.get('order', 'desc')
+        sort_by = self.request.GET.get("sort_by")
+        order = self.request.GET.get("order", "desc")
         queryset = Statistics.objects.filter(profile__user=current_user)
 
         # Сортировка queryset в соответствии с параметрами сортировки
-        if sort_by == 'followers':
-            queryset = queryset.order_by('-followers' if order == 'desc' else 'followers')
-        elif sort_by == 'created_at':
-            queryset = queryset.order_by('-created_at' if order == 'desc' else 'created_at')
+        if sort_by == "followers":
+            queryset = queryset.order_by("-followers" if order == "desc" else "followers")
+        elif sort_by == "created_at":
+            queryset = queryset.order_by("-created_at" if order == "desc" else "created_at")
         else:
-            queryset = queryset.order_by('name', '-created_at').distinct('name')
+            queryset = queryset.order_by("name", "-created_at").distinct("name")
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sort_by'] = self.request.GET.get('sort_by')
-        context['order'] = self.request.GET.get('order', 'desc')
+        context["sort_by"] = self.request.GET.get("sort_by")
+        context["order"] = self.request.GET.get("order", "desc")
         return context
 
 
 class PeriodStatistic(LoginRequiredMixin, OwnProfileMixin, ListView):
     model = Statistics
-    context_object_name = 'statistics_period'
-    template_name = 'influencers_statistic/period_statistics.html'
-    extra_context = {'title': 'Filter by period statistics'}
+    context_object_name = "statistics_period"
+    template_name = "influencers_statistic/period_statistics.html"
+    extra_context = {"title": "Filter by period statistics"}
 
     def get_queryset(self):
         current_user = self.request.user
-        date_start = self.request.GET.get('date_start')
-        date_end = self.request.GET.get('date_end')
+        date_start = self.request.GET.get("date_start")
+        date_end = self.request.GET.get("date_end")
 
         if date_start and date_end:
-            date_start = datetime.strptime(date_start, '%Y-%m-%d').date()
-            date_end = datetime.strptime(date_end, '%Y-%m-%d').date()
+            date_start = datetime.strptime(date_start, "%Y-%m-%d").date()
+            date_end = datetime.strptime(date_end, "%Y-%m-%d").date()
 
             # Добавьте фильтрацию по текущему пользователю здесь
-            start_stats = Statistics.objects.filter(
-                profile__user=current_user,
-                created_at__date__gte=date_start
-            ).order_by('profile', 'created_at').distinct('profile').values('profile', 'followers', 'name', 'profile_pictures')
+            start_stats = (
+                Statistics.objects.filter(profile__user=current_user, created_at__date__gte=date_start)
+                .order_by("profile", "created_at")
+                .distinct("profile")
+                .values("profile", "followers", "name", "profile_pictures")
+            )
 
-            end_stats = Statistics.objects.filter(
-                profile__user=current_user,
-                created_at__date__lte=date_end
-            ).order_by('profile', '-created_at').distinct('profile').values('profile', 'followers', 'name', 'profile_pictures')
+            end_stats = (
+                Statistics.objects.filter(profile__user=current_user, created_at__date__lte=date_end)
+                .order_by("profile", "-created_at")
+                .distinct("profile")
+                .values("profile", "followers", "name", "profile_pictures")
+            )
 
-            start_followers = {stat['profile']: stat['followers'] for stat in start_stats}
+            start_followers = {stat["profile"]: stat["followers"] for stat in start_stats}
             statistics_period = []
             for stat in end_stats:
-                profile_id = stat['profile']
-                profile_photo = Statistics.objects.filter(profile=profile_id).order_by('-created_at').first().profile_pictures
-                name = stat['name']
+                profile_id = stat["profile"]
+                profile_photo = (
+                    Statistics.objects.filter(profile=profile_id).order_by("-created_at").first().profile_pictures
+                )
+                name = stat["name"]
                 followers_start = start_followers.get(profile_id, 0)
-                followers_end = stat['followers']
+                followers_end = stat["followers"]
                 followers_change = followers_end - followers_start
                 followers_change_percent = ((followers_change / followers_start) * 100) if followers_start else 0
 
-                statistics_period.append({
-                    'profile_pictures': profile_photo,
-                    'profile_id': profile_id,
-                    'name': name,
-                    'followers_start': followers_start,
-                    'followers_end': followers_end,
-                    'followers_change': followers_change,
-                    'followers_change_percent': followers_change_percent,
-                })
+                statistics_period.append(
+                    {
+                        "profile_pictures": profile_photo,
+                        "profile_id": profile_id,
+                        "name": name,
+                        "followers_start": followers_start,
+                        "followers_end": followers_end,
+                        "followers_change": followers_change,
+                        "followers_change_percent": followers_change_percent,
+                    }
+                )
 
             # Сортировка результатов
-            statistics_period.sort(key=lambda x: x['followers_end'], reverse=True)
+            statistics_period.sort(key=lambda x: x["followers_end"], reverse=True)
             return statistics_period
 
         # Если даты не указаны, возвращаем пустой QuerySet
@@ -117,11 +120,11 @@ class ProfileStatsUpdater:
         Statistics.objects.update_or_create(
             profile=self.profile,
             defaults={
-                'name': self.profile_data.name,
-                'profile_pictures': profile_pictures,
-                'profile_pictures_url': profile_pictures_url,
-                'followers': followers,
-            }
+                "name": self.profile_data.name,
+                "profile_pictures": profile_pictures,
+                "profile_pictures_url": profile_pictures_url,
+                "followers": followers,
+            },
         )
 
 

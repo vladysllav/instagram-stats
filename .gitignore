@@ -10,7 +10,8 @@ db.sqlite3
 media/
 *.swp
 media/
-
+hooks_config/
+pre-commit
 instagram_session.json
 celerybeat-schedule.bak
 celerybeat-schedule.dat

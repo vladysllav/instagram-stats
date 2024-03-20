@@ -1,10 +1,11 @@
 """Signals for influencers app."""
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from utils import client
 
 
-@receiver(post_save, sender='influencers.BaseProfile')
+@receiver(post_save, sender="influencers.BaseProfile")
 def create_dynamic_profile_data(sender, instance, created, **kwargs):
     """
     Creates a Statistics object when a new BaseProfile is created.
@@ -23,12 +24,11 @@ def create_dynamic_profile_data(sender, instance, created, **kwargs):
 
     if created:
         url_profile = instance.url_profile
-        name = url_profile.rstrip('/').split('/')[-1]
+        name = url_profile.rstrip("/").split("/")[-1]
         Statistics.objects.create(
             profile=instance,
             name=name,
             profile_pictures=client.get_save_profile_pictures(name),
             followers=client.get_profile_followers(name),
-            profile_pictures_url=client.get_profile_photo(name)
+            profile_pictures_url=client.get_profile_photo(name),
         )
-
