@@ -83,11 +83,8 @@ Create virtual env.
 
 This project uses pre-commit hooks for automatic code checking before committing. To use this functionality, follow these steps:
 
-1. Install pre-commit on your computer if it is not already installed:
-   ```shell
-   pip install pre-commit
-   ```
-   After that, navigate to the root of your repository and run the command:
+   1. After installing all requirements how it says above, you should navigate to the root of your repository and run the command:
+
 
    ```shell
    pre-commit install

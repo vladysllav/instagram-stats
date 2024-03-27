@@ -1,10 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from default_auth.views import OwnProfileMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.views.generic import ListView
 from influencers.models import BaseProfile
+from influencers_statistic.enums import StatisticsDaysEnum
 from influencers_statistic.models import Statistics
 from utils import client
 
@@ -46,59 +47,65 @@ class PeriodStatistic(LoginRequiredMixin, OwnProfileMixin, ListView):
 
     def get_queryset(self):
         current_user = self.request.user
-        date_start = self.request.GET.get("date_start")
-        date_end = self.request.GET.get("date_end")
+        period = self.request.GET.get("period")
 
-        if date_start and date_end:
-            date_start = datetime.strptime(date_start, "%Y-%m-%d").date()
-            date_end = datetime.strptime(date_end, "%Y-%m-%d").date()
+        statistics_manager = Statistics.stats_manager
 
-            # Добавьте фильтрацию по текущему пользователю здесь
-            start_stats = (
-                Statistics.objects.filter(profile__user=current_user, created_at__date__gte=date_start)
-                .order_by("profile", "created_at")
-                .distinct("profile")
-                .values("profile", "followers", "name", "profile_pictures")
+        if period == "last_7_days":
+            stats = statistics_manager.get_days_statistics(current_user, StatisticsDaysEnum.seven_days)
+        elif period == "last_90_days":
+            stats = statistics_manager.get_days_statistics(current_user, StatisticsDaysEnum.ninety_days)
+        else:
+            date_start = self.request.GET.get("date_start")
+            date_end = self.request.GET.get("date_end")
+
+            if date_start and date_end:
+                date_start = datetime.strptime(date_start, "%Y-%m-%d").date()
+                date_end = datetime.strptime(date_end, "%Y-%m-%d").date()
+                if date_start > date_end:
+                    return Statistics.objects.none()
+            else:
+                current_date = datetime.now().date()
+                date_start = current_date - timedelta(days=30)
+                date_end = current_date
+
+            stats = statistics_manager.get_period_statistics(current_user, date_start, date_end)
+
+        start_followers = {stat.profile_id: stat.followers for stat in stats}
+        statistics_period = []
+        for stat in stats:
+            profile_id = stat.profile_id
+            profile_photo = (
+                Statistics.objects.filter(profile=profile_id).order_by("-created_at").first().profile_pictures
+            )
+            name = stat.name
+            followers_start = start_followers.get(profile_id, 0)
+            followers_end = stat.followers
+            followers_change = followers_end - followers_start
+            followers_change_percent = ((followers_change / followers_start) * 100) if followers_start else 0
+
+            statistics_period.append(
+                {
+                    "profile_pictures": profile_photo,
+                    "profile_id": profile_id,
+                    "name": name,
+                    "followers_start": followers_start,
+                    "followers_end": followers_end,
+                    "followers_change": followers_change,
+                    "followers_change_percent": followers_change_percent,
+                }
             )
 
-            end_stats = (
-                Statistics.objects.filter(profile__user=current_user, created_at__date__lte=date_end)
-                .order_by("profile", "-created_at")
-                .distinct("profile")
-                .values("profile", "followers", "name", "profile_pictures")
-            )
+        # Сортировка результатов
+        statistics_period.sort(key=lambda x: x["followers_end"], reverse=True)
+        return statistics_period
 
-            start_followers = {stat["profile"]: stat["followers"] for stat in start_stats}
-            statistics_period = []
-            for stat in end_stats:
-                profile_id = stat["profile"]
-                profile_photo = (
-                    Statistics.objects.filter(profile=profile_id).order_by("-created_at").first().profile_pictures
-                )
-                name = stat["name"]
-                followers_start = start_followers.get(profile_id, 0)
-                followers_end = stat["followers"]
-                followers_change = followers_end - followers_start
-                followers_change_percent = ((followers_change / followers_start) * 100) if followers_start else 0
-
-                statistics_period.append(
-                    {
-                        "profile_pictures": profile_photo,
-                        "profile_id": profile_id,
-                        "name": name,
-                        "followers_start": followers_start,
-                        "followers_end": followers_end,
-                        "followers_change": followers_change,
-                        "followers_change_percent": followers_change_percent,
-                    }
-                )
-
-            # Сортировка результатов
-            statistics_period.sort(key=lambda x: x["followers_end"], reverse=True)
-            return statistics_period
-
-        # Если даты не указаны, возвращаем пустой QuerySet
-        return Statistics.objects.none()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["date_start"] = self.request.GET.get("date_start")
+        context["date_end"] = self.request.GET.get("date_end")
+        context["period"] = self.request.GET.get("period")
+        return context
 
 
 class ProfileStatsUpdater:
