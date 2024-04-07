@@ -107,9 +107,9 @@ input[type="date"] {
               </td>
 
               <td style="vertical-align: middle; text-align: center;">{{ stat.name }}</td>
-              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_start }}</td>
-              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_end }}</td>
-              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_change }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.followers }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.end_followers_number }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_change_number }}</td>
               <td style="vertical-align: middle; text-align: center;">{{ stat.followers_change_percent|floatformat:2 }}%</td>
             </tr>
           {% endfor %}
