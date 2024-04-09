@@ -54,7 +54,7 @@ class PeriodStatistic(LoginRequiredMixin, OwnProfileMixin, ListView):
         period = self.request.GET.get("period")
 
         statistics_manager = Statistics.stats_manager
-        statistics_services = InfluencersStatisticsServices(current_user)
+        statistics_services = InfluencersStatisticsServices()
 
         if period == "last_7_days":
             statistics_period = statistics_manager.get_days_statistics(current_user, StatisticsDaysEnum.seven_days)

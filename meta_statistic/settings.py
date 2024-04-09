@@ -44,12 +44,21 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "default_auth.apps.DefaultAuthConfig",
-    "influencers.apps.InfluencersConfig",
-    "influencers_statistic.apps.InfluencersStatisticConfig",
+]
+
+# packages
+INSTALLED_APPS += [
     "django_celery_beat",
     "fontawesomefree",
     "debug_toolbar",
+]
+
+# apps
+INSTALLED_APPS += [
+    "default_auth.apps.DefaultAuthConfig",
+    "influencers.apps.InfluencersConfig",
+    "influencers_statistic.apps.InfluencersStatisticConfig",
+    "common.apps.CommonConfig",
 ]
 
 MIDDLEWARE = [
