@@ -48,20 +48,39 @@ input[type="date"] {
 </style>
   <h2 style="color: #ffc107; text-align: center; margin-top: 30px;"><strong>{{ title }}</strong></h2>
 
+    <div style="display: flex; flex-direction: column; align-items: center;">
     <div style="display: flex; justify-content: center; margin-top: 20px;">
         <form method="get" action="{% url 'period_statistics' %}" style="margin-bottom: 20px;">
-          <label for="date_start" style="color: #ffc107; margin-right: 10px;">Start Date:</label>
-          <input type="date" id="date_start" name="date_start" required style="margin-right: 10px;">
+            <label for="date_start" style="color: #ffc107; margin-right: 10px;">Start Date:</label>
+            <input type="date" id="date_start" name="date_start" required style="margin-right: 10px;">
 
-          <label for="date_end" style="color: #ffc107; margin-right: 10px;">End Date:</label>
-          <input type="date" id="date_end" name="date_end" required style="margin-right: 10px;">
+            <label for="date_end" style="color: #ffc107; margin-right: 10px;">End Date:</label>
+            <input type="date" id="date_end" name="date_end" required style="margin-right: 10px;">
 
-          <input type="submit" value="Get Statistics" class="custom-btn">
+            <input type="submit" value="Get Statistics" class="custom-btn">
         </form>
     </div>
 
-  <div style="display: flex; justify-content: center; margin-top: 20px;">
     {% if statistics_period %}
+        {% if period == "last_7_days" %}
+            <h2 style="color: #ffc107; text-align: center; margin-top: 30px;">
+                <strong>Statistics for last 7 days</strong>
+            </h2>
+        {% elif period == "last_90_days" %}
+            <h2 style="color: #ffc107; text-align: center; margin-top: 30px;">
+                <strong>Statistics for last 90 days</strong>
+            </h2>
+        {% else %}
+            {% if not date_start and not date_end %}
+                <h2 style="color: #ffc107; text-align: center; margin-top: 30px;">
+                    <strong>Default statistics for last 30 days</strong>
+                </h2>
+            {% else %}
+                <h2 style="color: #ffc107; text-align: center; margin-top: 30px;">
+                    <strong>Statistics for the selected period ({{ date_start }} - {{ date_end }})</strong>
+                </h2>
+            {% endif %}
+        {% endif %}
       <table class="table" style="width: 80%; max-width: 1200px; margin-top: 20px; margin-bottom: 20px; margin-left: auto; margin-right: auto;  color: white; border: 3px solid #ffc107; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
         <thead>
           <tr style="border-bottom: 3px solid #ffc107;">
@@ -88,9 +107,9 @@ input[type="date"] {
               </td>
 
               <td style="vertical-align: middle; text-align: center;">{{ stat.name }}</td>
-              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_start }}</td>
-              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_end }}</td>
-              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_change }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.followers }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.end_followers_number }}</td>
+              <td style="vertical-align: middle; text-align: center;">{{ stat.followers_change_number }}</td>
               <td style="vertical-align: middle; text-align: center;">{{ stat.followers_change_percent|floatformat:2 }}%</td>
             </tr>
           {% endfor %}
@@ -101,8 +120,9 @@ input[type="date"] {
     {% endif %}
   </div>
   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-
-
+        <a href="{% url 'period_statistics' %}?period=last_7_days" class="btn custom-btn btn-lg ml-2">Last 7 Days</a>
+        <a href="{% url 'period_statistics' %}?period=last_90_days" class="btn custom-btn btn-lg ml-2">Last 90 Days</a>
+        <a href="{% url 'period_statistics' %}" class="btn custom-btn btn-lg ml-2">Reset filters</a>
         <a href="{% url 'home' %}" class="btn custom-btn btn-lg ml-2">Cancel</a>
       </div>
 {% endblock %}
