@@ -19,6 +19,13 @@ class SignupForm(ModelForm):
         widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Re-Password"})
     )
 
+    def clean(self):
+        form_data = self.cleaned_data
+        if form_data["password"] != form_data["password2"]:
+            self._errors["password"] = "Passwords do not match"  # Will raise an error message
+            del form_data["password"]
+        return form_data
+
     class Meta:
         """
         Form model with fields.

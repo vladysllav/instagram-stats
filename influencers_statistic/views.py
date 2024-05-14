@@ -85,11 +85,11 @@ class ProfileStatsUpdater:
         self.profile_data = self.profile.statistics.first()
 
     def add_statistics(self):
-        followers = client.get_profile_followers(self.profile_data.name)
+        followers = client.get_profile_followers(self.profile_data["name"])
 
-        if self.profile_data.profile_pictures_url != client.get_profile_photo(self.profile_data.name):
-            profile_pictures = client.get_save_profile_pictures(self.profile_data.name)
-            profile_pictures_url = client.get_profile_photo(self.profile_data.name)
+        if self.profile_data["profile_pictures_url"] != client.get_profile_photo(self.profile_data["name"]):
+            profile_pictures = client.get_save_profile_pictures(self.profile_data["name"])
+            profile_pictures_url = client.get_profile_photo(self.profile_data["name"])
         else:
             profile_pictures = self.profile_data.profile_pictures
             profile_pictures_url = self.profile_data.profile_pictures_url
@@ -97,7 +97,7 @@ class ProfileStatsUpdater:
         Statistics.objects.update_or_create(
             profile=self.profile,
             defaults={
-                "name": self.profile_data.name,
+                "name": self.profile_data["name"],
                 "profile_pictures": profile_pictures,
                 "profile_pictures_url": profile_pictures_url,
                 "followers": followers,
